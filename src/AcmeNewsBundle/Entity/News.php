@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * News
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="AcmeNewsBundle\Entity\NewsRepository")
+ * @ORM\Entity(repositoryClass="AcmeNewsBundle\Repository\NewsRepository")
  */
 class News
 {
@@ -101,7 +101,7 @@ class News
      *
      * @return boolean
      */
-    public function getPublished()
+    public function isPublished()
     {
         return $this->published;
     }

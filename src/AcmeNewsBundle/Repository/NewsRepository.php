@@ -1,6 +1,6 @@
 <?php
 
-namespace AcmeNewsBundle\Entity;
+namespace AcmeNewsBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -12,4 +12,22 @@ use Doctrine\ORM\EntityRepository;
  */
 class NewsRepository extends EntityRepository
 {
+    /**
+     * Get one published News by id
+     *
+     * @param $id
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findPublishedById($id)
+    {
+         return $this->createQueryBuilder('n')
+             ->where('n.id = :id')
+             ->andWhere("n.published = true")
+             ->setMaxResults(1)
+             ->setParameter('id', $id)
+             ->getQuery()
+             ->getOneOrNullResult()
+        ;
+    }
 }

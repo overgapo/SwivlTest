@@ -1,1 +1,10 @@
-Hello {{ name }}!
+{% extends '::base.html.twig' %}
+
+{% block body %}
+    {% for newsItem in pagination %}
+        {{ newsItem.date|date }} - {{ newsItem.shortText }} - {{ newsItem.published }} <br>
+    {% endfor %}
+    <div class="navigation">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<list>
+    {% for newsItem in pagination %}
+        <item id="{{ newsItem.id }}" date="{{ newsItem.date|date }}">
+            <announce>{{ newsItem.shortText }}</announce>
+            <description>{{ newsItem.text }}</description>
+        </item>
+    {% endfor %}
+</list>
+

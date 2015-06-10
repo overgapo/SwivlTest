@@ -1,0 +1,6 @@
+AcmeNewsBundle\Entity\News:
+    news_{1..50}:
+        date: <dateTimeThisYear($max = 'now')>
+        published: <boolean($chanceOfGettingTrue = 80)>
+        shortText: <text($maxNbChars = 128)>
+        text: <text($maxNbChars = 1024)>

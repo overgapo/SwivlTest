@@ -12,21 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/news")
+     * @Route("/news.{_format}", defaults={"_format": "html"}, requirements={"_format": "html|xml"})
      * @Template()
      */
     public function indexAction(Request $request)
     {
-        return ['pagination' => $this->getPaginatedNews($request->query->getInt('page', 1))];
-    }
+        $newsRepository = $this->get('acme_news.repository.news');
+        $paginator = $this->get('knp_paginator');
 
-    /**
-     * @Route("/news.xml", defaults={"_format" = "xml"})
-     * @Template()
-     */
-    public function indexXmlAction(Request $request)
-    {
-        return ['pagination' => $this->getPaginatedNews($request->query->getInt('page', 1))];
+        $pagination = $paginator->paginate(
+            $newsRepository->findByPublished(true),
+            $request->query->getInt('page', 1) // page number
+        );
+
+        return ['pagination' => $pagination];
     }
 
     /**
@@ -44,6 +43,8 @@ class DefaultController extends Controller
     }
 
     /**
+     * Renders block with news propositions
+     *
      * @Route("/more-news/{id}")
      * @Template()
      */
@@ -59,12 +60,6 @@ class DefaultController extends Controller
      */
     private function getPaginatedNews($page)
     {
-        $newsRepository = $this->get('acme_news.repository.news');
-        $paginator = $this->get('knp_paginator');
 
-        return $paginator->paginate(
-            $newsRepository->findByPublished(true),
-            $page // page number
-        );
     }
 }

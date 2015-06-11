@@ -17,15 +17,11 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $news = $this->getDoctrine()
-            ->getRepository('AcmeNewsBundle:News')
-            ->findByPublished(true)
-        ;
+        $newsRepository = $this->get('acme_news.repository.news');
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $news,
-            $request->query->getInt('page', 1)/*page number*/,
-            10/*limit per page*/
+            $newsRepository->findByPublished(true),
+            $request->query->getInt('page', 1)/*page number*/
         );
 
         return ['pagination' => $pagination];
@@ -37,15 +33,11 @@ class DefaultController extends Controller
      */
     public function indexXmlAction(Request $request)
     {
-        $news = $this->getDoctrine()
-            ->getRepository('AcmeNewsBundle:News')
-            ->findByPublished(true)
-        ;
+        $newsRepository = $this->get('acme_news.repository.news');
         $paginator = $this->get('knp_paginator');
         $pagination = $paginator->paginate(
-            $news,
-            $request->query->getInt('page', 1)/*page number*/,
-            10/*limit per page*/
+            $newsRepository->findByPublished(true),
+            $request->query->getInt('page', 1)/*page number*/
         );
 
         return ['pagination' => $pagination];

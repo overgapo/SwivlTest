@@ -24,6 +24,7 @@ Apache virtual host example:
     DocumentRoot /path/to/project/web
     ErrorLog /path/to/project/app/logs/error.log
     <Directory "/path/to/project/web">
+        Require all granted
         Options Indexes FollowSymLinks MultiViews
         AllowOverride All
         Order allow,deny

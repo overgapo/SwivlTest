@@ -32,7 +32,7 @@ Apache virtual host example:
 ```bash
 /path/to/project$ php composer.phar install -o --dev
 ```
-Composer will ask for db parameters etc. Don't forget to create db.
+Composer will ask for db parameters etc.
 
 ###4) System Checking
 Make sure that your system is properly configured.

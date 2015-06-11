@@ -82,8 +82,7 @@
 
 
 
-    <target name="fixtures">
-        <phingcall target="db" />
+    <target name="fixtures" depends="db">
         <echo msg="Installing fixtures" />
         <SymfonyConsole command="doctrine:fixtures:load --no-interaction"/>
     </target>
@@ -94,5 +93,5 @@
         <SymfonyConsole command="assetic:dump -e=${env}" />
     </target>
 
-    <target name="full" depends="composer-install, bootstrap, cache, logs, fixtures, assets" />
+    <target name="full" depends="composer-install, bootstrap, cache, logs, fixtures, assets, acl" />
 </project>

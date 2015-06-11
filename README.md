@@ -18,8 +18,6 @@ Apache virtual host example:
 <VirtualHost *:80>
     ServerName swivl.local
     DocumentRoot /path/to/project/web
-    RewriteLogLevel 0
-    RewriteLog /path/to/project/app/logs/rewrite.log
     ErrorLog /path/to/project/app/logs/error.log
     <Directory "/path/to/project/web">
         Options Indexes FollowSymLinks MultiViews
@@ -32,9 +30,9 @@ Apache virtual host example:
 
 ###3) Vendors installation
 ```bash
-/path/to/project$ composer install -o --dev
+/path/to/project$ php composer.phar install -o --dev
 ```
-Composer will ask for db parameters etc.
+Composer will ask for db parameters etc. Don't forget to create db.
 
 ###4) System Checking
 Make sure that your system is properly configured.

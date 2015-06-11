@@ -62,7 +62,28 @@
         </if>
     </target>
 
+    <target name="db_update">
+        <echo msg="Database schema update" />
+        <SymfonyConsole command="doctrine:schema:update -e=${env} --force" />
+    </target>
+
+    <target name="schema">
+        <echo msg="Validate schema" />
+        <SymfonyConsole command="doctrine:schema:validate -e=${env}" />
+    </target>
+
+    <target name="db">
+        <echo msg="Database schema drop" />
+        <SymfonyConsole command="doctrine:database:drop -e=${env} --force" />
+        <SymfonyConsole command="doctrine:database:create -e=${env}" />
+        <phingcall target="db_update" />
+        <phingcall target="schema" />
+    </target>
+
+
+
     <target name="fixtures">
+        <phingcall target="db" />
         <echo msg="Installing fixtures" />
         <SymfonyConsole command="doctrine:fixtures:load --no-interaction"/>
     </target>

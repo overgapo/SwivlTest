@@ -17,14 +17,7 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $newsRepository = $this->get('acme_news.repository.news');
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $newsRepository->findByPublished(true),
-            $request->query->getInt('page', 1)/*page number*/
-        );
-
-        return ['pagination' => $pagination];
+        return ['pagination' => $this->getPaginatedNews($request->query->getInt('page', 1))];
     }
 
     /**
@@ -33,14 +26,7 @@ class DefaultController extends Controller
      */
     public function indexXmlAction(Request $request)
     {
-        $newsRepository = $this->get('acme_news.repository.news');
-        $paginator = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $newsRepository->findByPublished(true),
-            $request->query->getInt('page', 1)/*page number*/
-        );
-
-        return ['pagination' => $pagination];
+        return ['pagination' => $this->getPaginatedNews($request->query->getInt('page', 1))];
     }
 
     /**
@@ -65,5 +51,20 @@ class DefaultController extends Controller
     {
         $newsRepository = $this->get('acme_news.repository.news');
         return ['news' => $newsRepository->findMoreById($id, 3)];
+    }
+
+    /**
+     * @param $page
+     * @return \Knp\Component\Pager\Pagination\PaginationInterface
+     */
+    private function getPaginatedNews($page)
+    {
+        $newsRepository = $this->get('acme_news.repository.news');
+        $paginator = $this->get('knp_paginator');
+
+        return $paginator->paginate(
+            $newsRepository->findByPublished(true),
+            $page // page number
+        );
     }
 }

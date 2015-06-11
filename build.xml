@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="joybauer.com" default="console">
+
+    <property name="env" value="dev" override="true" />
+    <property name="project.bin.composer" value="${project.basedir}/composer.phar"/>
+
+    <target name="composer-install">
+        <echo msg="Installing vendors" />
+        <composer command="install" composer="${project.bin.composer}">
+            <arg value="--optimize-autoloader" />
+            <arg value="--prefer-source" />
+        </composer>
+    </target>
+
+    <target name="bootstrap">
+        <echo msg="Remove bootstrap" />
+        <delete file="app/bootstrap.php.cache" />
+        <echo msg="Building bootstrap" />
+        <exec command="php vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php" passthru="true" />
+    </target>
+
+    <target name="cache">
+        <echo msg="Destroying cache dir" />
+        <delete includeemptydirs="true">
+            <fileset dir="app/cache/">
+                <include name="**/*" />
+                <exclude name="/" />
+            </fileset>
+        </delete>
+        <echo msg="Clear cache" />
+        <SymfonyConsole command="cache:clear -e=${env} --no-debug" />
+        <echo msg="Warmup cache" />
+        <SymfonyConsole command="cache:warmup -e=${env} --no-debug" />
+    </target>
+
+    <target name="logs">
+        <echo msg="Create logs directory if it needed" />
+        <exec command='mkdir -p "${project.basedir}/app/logs"'/>
+        <echo msg="Destroying log file" />
+        <exec command='rm -fr "${project.basedir}/app/logs/${env}.log"'/>
+    </target>
+
+    <target name="acl">
+        <exec command="ps aux | grep -E '[a]pache|[h]ttpd' | grep -v root | head -1 | cut -d\  -f1" outputProperty="apache_user" />
+        <exec command="whoami" outputProperty="whoami" />
+        <if>
+            <os family="mac" />
+            <then>
+                <echo msg="Set permissions for the mac os server for user ${apache_user}" />
+                <exec command="sudo chmod +a '${apache_user} allow delete,write,append,file_inherit,directory_inherit' app/cache app/logs" passthru="true" />
+                <exec command="sudo chmod +a '${whoami} allow delete,write,append,file_inherit,directory_inherit' app/cache app/logs" passthru="true" />
+            </then>
+            <elseif>
+                <os family="unix" />
+                <then>
+                    <echo msg="Set permissions for the unix server or user ${apache_user}" />
+                    <exec command="sudo setfacl -R -m u:${apache_user}:rwX -m u:${whoami}:rwX app/cache app/logs" passthru="true" />
+                    <exec command="sudo setfacl -dR -m u:${apache_user}:rwX -m u:${whoami}:rwX app/cache app/logs" passthru="true" />
+                </then>
+            </elseif>
+        </if>
+    </target>
+
+    <target name="fixtures">
+        <echo msg="Installing fixtures" />
+        <SymfonyConsole command="doctrine:fixtures:load --no-interaction"/>
+    </target>
+
+    <target name="assets">
+        <echo msg="Installing assets" />
+        <SymfonyConsole command="assets:install -e=${env}" />
+        <SymfonyConsole command="assetic:dump -e=${env}" />
+    </target>
+
+    <target name="full" depends="composer-install, bootstrap, cache, logs, fixtures, assets" />
+</project>

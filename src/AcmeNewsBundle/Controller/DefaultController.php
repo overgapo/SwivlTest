@@ -53,13 +53,4 @@ class DefaultController extends Controller
         $newsRepository = $this->get('acme_news.repository.news');
         return ['news' => $newsRepository->findMoreById($id, 3)];
     }
-
-    /**
-     * @param $page
-     * @return \Knp\Component\Pager\Pagination\PaginationInterface
-     */
-    private function getPaginatedNews($page)
-    {
-
-    }
 }

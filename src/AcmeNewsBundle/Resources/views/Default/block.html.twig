@@ -1,0 +1,8 @@
+<ul class="list-group">
+    {% for newsItem in news %}
+        <li class="list-group-item">
+            <span class="badge">{{ newsItem.date|date('F j, Y') }}</span>
+            <a href="{{ path('acmenews_default_show', {'id': newsItem.id}) }}">{{ newsItem.shortText }}</a>
+        </li>
+    {% endfor %}
+</ul>

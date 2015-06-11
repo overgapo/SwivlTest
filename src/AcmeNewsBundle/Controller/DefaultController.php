@@ -56,4 +56,14 @@ class DefaultController extends Controller
     {
         return ['news' => $news];
     }
+
+    /**
+     * @Route("/more-news/{id}")
+     * @Template()
+     */
+    public function blockAction($id)
+    {
+        $newsRepository = $this->get('acme_news.repository.news');
+        return ['news' => $newsRepository->findMoreById($id, 3)];
+    }
 }

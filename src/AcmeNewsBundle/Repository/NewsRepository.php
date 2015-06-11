@@ -2,6 +2,7 @@
 
 namespace AcmeNewsBundle\Repository;
 
+use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -23,11 +24,34 @@ class NewsRepository extends EntityRepository
     {
          return $this->createQueryBuilder('n')
              ->where('n.id = :id')
-             ->andWhere("n.published = true")
+             ->andWhere('n.published = true')
              ->setMaxResults(1)
              ->setParameter('id', $id)
              ->getQuery()
              ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @param $id
+     * @param int $count
+     * @return array
+     */
+    public function findMoreById($id, $count = 5)
+    {
+        if ($count <= 0) {
+            throw new InvalidArgumentException('Count should be 1 or more');
+        }
+
+        return $this->createQueryBuilder('n')
+            ->addSelect('RAND() as HIDDEN rand')
+            ->addOrderBy('rand')
+            ->where('n.id <> :id')
+            ->andWhere('n.published = true')
+            ->setParameter('id', $id)
+            ->setMaxResults($count)
+            ->getQuery()
+            ->getResult()
         ;
     }
 }

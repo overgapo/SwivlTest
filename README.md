@@ -1,5 +1,9 @@
-SwivlTest
+Notes
 =========
+
+You can find dump of db in app/Resources/db_dump. But you really don't need it. Just follow steps in installation section and you'll get db filled with some faker data.
+
+Answers to MySQL tasks you can find [here](https://gist.github.com/overgapo/8f8aeeafcdcfdeab9b1e).
 
 Installation
 ============
